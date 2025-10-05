@@ -1,0 +1,28 @@
+{
+  "listCard": [
+    {
+      "nameProduct": "MFUND",
+      "numberProduct": "789654123",
+      "balanceProduct": "4000000",
+      "detaildProduct": "Ya tienes un 15% de tu objetivo "
+    },
+    {
+      "nameProduct": "CREA",
+      "numberProduct": "156123456",
+      "balanceProduct": "40000000",
+      "detaildProduct": "Ya tienes un 80% de tu objetivo "
+    },
+    {
+      "nameProduct": "FICS",
+      "numberProduct": "11213",
+      "balanceProduct": "15000",
+      "detaildProduct": "Ya tienes un 18% de tu objetivo "
+    },
+    {
+      "nameProduct": "BOLT",
+      "numberProduct": "122220",
+      "balanceProduct": "50000",
+      "detaildProduct": "Ya tienes un 1% de tu objetivo "
+    }
+  ]
+}

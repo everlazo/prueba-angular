@@ -1,0 +1,54 @@
+<header class="header">
+  <div class="container">
+    <!-- Menú hamburguesa -->
+    <button class="menu-toggle" (click)="toggleMenu()" aria-label="Abrir menú">
+      <span class="hamburger-icon">
+        <span></span>
+        <span></span>
+        <span></span>
+      </span>
+    </button>
+
+    <!-- Logo y título -->
+    <div class="brand">
+      <div class="logo">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="#00B050"/>
+          <path d="M2 17L12 22L22 17" stroke="#00B050" stroke-width="2"/>
+          <path d="M2 12L12 17L22 12" stroke="#00B050" stroke-width="2"/>
+        </svg>
+        <span class="logo-text">skandia</span>
+      </div>
+      <div class="divider">|</div>
+      <span class="title">Plan Financiero Digital - FPX</span>
+    </div>
+
+    <!-- Navegación derecha -->
+    <nav class="nav-right">
+      <a href="#" class="pill pill-secondary">
+        <span class="pill-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="2"/>
+            <path d="M5.5 8l2 2 3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span class="pill-text">Tu Financial Planner</span>
+      </a>
+      <a href="#" class="pill pill-primary">
+        <span class="pill-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M8 3V13M3 8H13" stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </span>
+        <span class="pill-text">Aportes</span>
+      </a>
+      <button class="circle-action help" aria-label="Ayuda">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+          <path d="M9.09 9a3 3 0 115.91 0c0 2-3 2-3 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="12" cy="17" r="1" fill="currentColor"/>
+        </svg>
+      </button>
+    </nav>
+  </div>
+</header>

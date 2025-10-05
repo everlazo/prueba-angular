@@ -1,24 +1,96 @@
 <section class="cards-container">
   @if (loading()) {
-    <div class="state loading">Cargando tarjetas…</div>
+    <div class="state loading">Cargando productos…</div>
   }
 
   @if (error()) {
     <div class="state error">{{ error() }}</div>
   }
 
-  <div class="grid">
-    @for (card of cards(); track card.numberProduct) {
-      <article class="card">
-        <header class="card-header">
-          <h3 class="name">{{ card.nameProduct }}</h3>
-          <small class="number">No. {{ card.numberProduct }}</small>
-        </header>
-        <div class="body">
-          <div class="balance">${{ card.balanceProduct }}</div>
-          <p class="detail">{{ card.detaildProduct }}</p>
+  <div class="container">
+    <div class="slider-container">
+      <!-- Botones de navegación -->
+      <button 
+        class="slider-btn prev-btn" 
+        (click)="prevSlide()" 
+        [disabled]="!canGoPrev()"
+        aria-label="Anterior">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      
+      <button 
+        class="slider-btn next-btn" 
+        (click)="nextSlide()" 
+        [disabled]="!canGoNext()"
+        aria-label="Siguiente">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      
+      <!-- Contenedor del slider -->
+      <div class="slider-wrapper">
+        <div class="cards-slider" [style.transform]="getSliderTransform()">
+          @for (card of cards(); track card.numberProduct) {
+        <article class="product-card" [class]="getCardClass(card.nameProduct)">
+          <!-- Ícono del producto -->
+          <div class="product-icon">
+            @if (card.nameProduct === 'CREA') {
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                <circle cx="16" cy="12" r="4" stroke="currentColor" stroke-width="2"/>
+                <path d="M16 20c-4 0-8 2-8 4v2h16v-2c0-2-4-4-8-4z" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            } @else {
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                <rect x="4" y="8" width="24" height="16" rx="2" stroke="currentColor" stroke-width="2"/>
+                <path d="M8 12h16M8 16h8" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            }
+          </div>
+
+          <!-- Nombre del producto -->
+          <h3 class="product-name">{{ getProductDisplayName(card.nameProduct) }}</h3>
+          <div class="product-number">No. {{ card.numberProduct }}</div>
+
+          <!-- Balance actual -->
+          <div class="balance-section">
+            <label class="balance-label">{{ getBalanceLabel(card.nameProduct) }}</label>
+            <div class="balance-amount">{{ formatCurrency(card.balanceProduct) }}</div>
+          </div>
+
+          <!-- Bloque de detalle/progreso (para TODOS los productos) -->
+          <div class="progress-info" [class.crea-info]="card.nameProduct === 'CREA'">
+            <div class="progress-icon">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <circle cx="8" cy="8" r="7" stroke="#FFA500" stroke-width="2"/>
+                <path d="M8 12V8M8 4h.01" stroke="#FFA500" stroke-width="2"/>
+              </svg>
+            </div>
+            <div class="progress-text">
+              <div>{{ card.detaildProduct }}</div>
+            </div>
+          </div>
+
+          <!-- Checkbox de selección -->
+          <div class="card-actions">
+            <div class="checkbox-container">
+              <input type="checkbox" id="associate-{{ card.numberProduct }}" class="associate-checkbox">
+              <label for="associate-{{ card.numberProduct }}"></label>
+            </div>
+          </div>
+        </article>
+          }
         </div>
-      </article>
-    }
+      </div>
+    </div>
+
+    <!-- Botón asociar a objetivo -->
+    <div class="action-section">
+      <button class="associate-button">
+        ASOCIAR A OBJETIVO
+      </button>
+    </div>
   </div>
 </section>

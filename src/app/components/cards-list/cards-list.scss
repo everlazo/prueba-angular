@@ -1,14 +1,23 @@
 .cards-container {
-  padding: 1rem;
+  padding: 32px 0;
+  background: white;
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
 }
 
 .state {
-  padding: 0.75rem 1rem;
+  padding: 1rem;
   border-radius: 8px;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  
   &.loading {
-    background: #f3f4f6;
-    color: #374151;
+    background: var(--skandia-light, #E8F5E8);
+    color: var(--skandia-dark, #006B3C);
   }
   &.error {
     background: #fee2e2;
@@ -16,53 +25,305 @@
   }
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-  gap: 1rem;
-
-  @media (min-width: 640px) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+.slider-container {
+  position: relative;
+  margin-bottom: 32px;
+  
+  .slider-wrapper {
+    overflow: hidden;
+    border-radius: 12px;
   }
-  @media (min-width: 1024px) {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  
+  .cards-slider {
+    display: flex;
+    gap: 20px;
+    transition: transform 0.3s ease;
+    
+    .product-card {
+      flex: 0 0 calc(33.333% - 14px); // 3 tarjetas por vista
+      max-width: calc(33.333% - 14px);
+    }
+  }
+  
+  .slider-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 48px;
+    height: 48px;
+    background: white;
+    border: 2px solid var(--skandia-primary, #00B050);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    
+    svg {
+      color: var(--skandia-primary, #00B050);
+    }
+    
+    &:hover:not(:disabled) {
+      background: var(--skandia-primary, #00B050);
+      
+      svg {
+        color: white;
+      }
+    }
+    
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      border-color: #DDD;
+      
+      svg {
+        color: #999;
+      }
+    }
+    
+    &.prev-btn {
+      left: -24px;
+    }
+    
+    &.next-btn {
+      right: -24px;
+    }
   }
 }
 
-.card {
+.product-card {
   background: white;
   border-radius: 12px;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-  padding: 1rem;
+  border: 1px solid #E5E5E5;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-}
-
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 0.5rem;
-
-  .name {
-    font-size: 1.125rem;
+  gap: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  position: relative;
+  
+  &:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+  }
+  
+  .product-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    svg {
+      color: #666;
+    }
+  }
+  
+  .product-name {
+    font-size: 16px;
     font-weight: 600;
+    color: #333;
     margin: 0;
+    line-height: 1.3;
   }
-  .number {
-    color: #6b7280;
+  
+  .product-number {
+    color: #666;
+    font-size: 12px;
+    margin-top: -8px;
+  }
+  
+  .balance-section {
+    .balance-label {
+      display: block;
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 4px;
+    }
+    
+    .balance-amount {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--skandia-primary, #00B050);
+    }
+  }
+  
+  .progress-info {
+    background: #FFF9E6;
+    border: 1px solid #FFE066;
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    
+    &.crea-info {
+      background: rgba(0, 176, 80, 0.1);
+      border-color: var(--skandia-primary, #00B050);
+    }
+    
+    .progress-icon {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+    }
+    
+    .progress-text {
+      font-size: 12px;
+      color: #333;
+      line-height: 1.3;
+      
+      .sub-text {
+        color: #666;
+        margin-top: 2px;
+      }
+    }
+  }
+  
+  .card-actions {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    
+    .checkbox-container {
+      position: relative;
+      
+      .associate-checkbox {
+        opacity: 0;
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        
+        &:checked + label::after {
+          opacity: 1;
+        }
+      }
+      
+      label {
+        display: block;
+        width: 20px;
+        height: 20px;
+        border: 2px solid #DDD;
+        border-radius: 4px;
+        cursor: pointer;
+        position: relative;
+        background: white;
+        
+        &::after {
+          content: '✓';
+          position: absolute;
+          top: -2px;
+          left: 2px;
+          color: var(--skandia-primary, #00B050);
+          font-weight: bold;
+          font-size: 14px;
+          opacity: 0;
+          transition: opacity 0.2s;
+        }
+        
+        &:hover {
+          border-color: var(--skandia-primary, #00B050);
+        }
+      }
+    }
   }
 }
 
-.body {
-  .balance {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 0.25rem;
+// Estilos específicos por tipo de tarjeta
+.fic-card {
+  .product-icon {
+    background: rgba(0, 176, 80, 0.1);
+    
+    svg {
+      color: var(--skandia-primary, #00B050);
+    }
   }
-  .detail {
-    color: #374151;
-    margin: 0;
+}
+
+.crea-card {
+  .product-icon {
+    background: rgba(255, 165, 0, 0.1);
+    
+    svg {
+      color: #FFA500;
+    }
+  }
+}
+
+.default-card {
+  .product-icon {
+    background: #F5F5F5;
+  }
+}
+
+.action-section {
+  text-align: center;
+  
+  .associate-button {
+    background: var(--skandia-primary, #00B050);
+    color: white;
+    border: none;
+    padding: 12px 32px;
+    border-radius: 24px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background: var(--skandia-dark, #006B3C);
+      transform: translateY(-1px);
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 1024px) {
+  .slider-container {
+    .cards-slider {
+      .product-card {
+        flex: 0 0 calc(50% - 10px); // 2 tarjetas por vista en tablet
+        max-width: calc(50% - 10px);
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .cards-container {
+    padding: 24px 0;
+  }
+  
+  .slider-container {
+    .cards-slider {
+      .product-card {
+        flex: 0 0 calc(100% - 0px); // 1 tarjeta por vista en móvil
+        max-width: 100%;
+        padding: 16px;
+      }
+    }
+    
+    .slider-btn {
+      width: 40px;
+      height: 40px;
+      
+      &.prev-btn {
+        left: -20px;
+      }
+      
+      &.next-btn {
+        right: -20px;
+      }
+    }
   }
 }
