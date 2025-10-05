@@ -1,0 +1,24 @@
+<section class="cards-container">
+  @if (loading()) {
+    <div class="state loading">Cargando tarjetas…</div>
+  }
+
+  @if (error()) {
+    <div class="state error">{{ error() }}</div>
+  }
+
+  <div class="grid">
+    @for (card of cards(); track card.numberProduct) {
+      <article class="card">
+        <header class="card-header">
+          <h3 class="name">{{ card.nameProduct }}</h3>
+          <small class="number">No. {{ card.numberProduct }}</small>
+        </header>
+        <div class="body">
+          <div class="balance">${{ card.balanceProduct }}</div>
+          <p class="detail">{{ card.detaildProduct }}</p>
+        </div>
+      </article>
+    }
+  </div>
+</section>
