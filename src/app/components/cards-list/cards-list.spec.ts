@@ -6,83 +6,83 @@ import { of, throwError } from 'rxjs';
 import { CardsList } from './cards-list';
 import { CardsService, Card } from '../../services/cards';
 
-describe('CardsList', () => {
-  let component: CardsList;
+describe('Componente Lista de Tarjetas', () => {
+  let componente: CardsList;
   let fixture: ComponentFixture<CardsList>;
-  let cardsService: jasmine.SpyObj<CardsService>;
+  let servicioTarjetas: jasmine.SpyObj<CardsService>;
   let httpMock: HttpTestingController;
 
-  const mockCards: Card[] = [
+  const tarjetasDePrueba: Card[] = [
     {
       nameProduct: 'MFUND',
       numberProduct: '123456',
       balanceProduct: '1000000',
-      detaildProduct: 'Test card'
+      detaildProduct: 'Tarjeta de prueba'
     }
   ];
 
   beforeEach(async () => {
-    const cardsServiceSpy = jasmine.createSpyObj('CardsService', ['getCards']);
+    const servicioTarjetasSpy = jasmine.createSpyObj('CardsService', ['getCards']);
 
     await TestBed.configureTestingModule({
       imports: [CardsList],
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
-        { provide: CardsService, useValue: cardsServiceSpy }
+        { provide: CardsService, useValue: servicioTarjetasSpy }
       ]
     }).compileComponents();
 
-    cardsService = TestBed.inject(CardsService) as jasmine.SpyObj<CardsService>;
+    servicioTarjetas = TestBed.inject(CardsService) as jasmine.SpyObj<CardsService>;
     httpMock = TestBed.inject(HttpTestingController);
   });
 
-  it('should create', () => {
-    cardsService.getCards.and.returnValue(of(mockCards));
+  it('debería crear el componente correctamente', () => {
+    servicioTarjetas.getCards.and.returnValue(of(tarjetasDePrueba));
     
     fixture = TestBed.createComponent(CardsList);
-    component = fixture.componentInstance;
+    componente = fixture.componentInstance;
     
-    expect(component).toBeTruthy();
+    expect(componente).toBeTruthy();
   });
 
-  it('should load cards successfully', () => {
-    cardsService.getCards.and.returnValue(of(mockCards));
+  it('debería cargar las tarjetas exitosamente', () => {
+    servicioTarjetas.getCards.and.returnValue(of(tarjetasDePrueba));
     
     fixture = TestBed.createComponent(CardsList);
-    component = fixture.componentInstance;
+    componente = fixture.componentInstance;
     fixture.detectChanges();
     
-    expect(component.cards()).toEqual(mockCards);
-    expect(component.loading()).toBeFalse();
-    expect(component.error()).toBeNull();
+    expect(componente.cards()).toEqual(tarjetasDePrueba);
+    expect(componente.loading()).toBeFalse();
+    expect(componente.error()).toBeNull();
   });
 
-  it('should handle error when loading cards fails', () => {
-    cardsService.getCards.and.returnValue(throwError(() => new Error('Network error')));
+  it('debería manejar errores cuando falla la carga de tarjetas', () => {
+    servicioTarjetas.getCards.and.returnValue(throwError(() => new Error('Error de red')));
     
     fixture = TestBed.createComponent(CardsList);
-    component = fixture.componentInstance;
+    componente = fixture.componentInstance;
     fixture.detectChanges();
     
-    expect(component.cards()).toEqual([]);
-    expect(component.loading()).toBeFalse();
-    expect(component.error()).toBe('No se pudo cargar las tarjetas. Intenta nuevamente.');
+    expect(componente.cards()).toEqual([]);
+    expect(componente.loading()).toBeFalse();
+    expect(componente.error()).toBe('No se pudo cargar las tarjetas. Intenta nuevamente.');
   });
 
-  it('should format currency correctly', () => {
-    cardsService.getCards.and.returnValue(of(mockCards));
+  it('debería formatear la moneda correctamente', () => {
+    servicioTarjetas.getCards.and.returnValue(of(tarjetasDePrueba));
     
     fixture = TestBed.createComponent(CardsList);
-    component = fixture.componentInstance;
+    componente = fixture.componentInstance;
     
-    // Test that the function returns a valid currency format
-    const result1 = component.formatCurrency('1000000');
-    const result2 = component.formatCurrency('500000');
+    // Verificar que la función devuelve un formato de moneda válido
+    const resultado1 = componente.formatCurrency('1000000');
+    const resultado2 = componente.formatCurrency('500000');
     
-    expect(result1).toContain('1.000.000');
-    expect(result1).toContain('$');
-    expect(result2).toContain('500.000');
-    expect(result2).toContain('$');
+    expect(resultado1).toContain('1.000.000');
+    expect(resultado1).toContain('$');
+    expect(resultado2).toContain('500.000');
+    expect(resultado2).toContain('$');
   });
 });

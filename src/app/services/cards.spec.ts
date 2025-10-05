@@ -4,15 +4,15 @@ import { provideHttpClientTesting, HttpTestingController } from '@angular/common
 
 import { CardsService, Card } from './cards';
 
-describe('CardsService', () => {
-  let service: CardsService;
+describe('Servicio de Tarjetas', () => {
+  let servicio: CardsService;
   let httpMock: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [provideHttpClient(), provideHttpClientTesting()]
     });
-    service = TestBed.inject(CardsService);
+    servicio = TestBed.inject(CardsService);
     httpMock = TestBed.inject(HttpTestingController);
   });
 
@@ -20,58 +20,58 @@ describe('CardsService', () => {
     httpMock.verify();
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
+  it('debería crear el servicio correctamente', () => {
+    expect(servicio).toBeTruthy();
   });
 
-  it('should fetch cards and map listCard', () => {
-    const mockResponse = {
+  it('debería obtener tarjetas y mapear la lista de tarjetas', () => {
+    const respuestaDePrueba = {
       listCard: [
         { nameProduct: 'MFUND', numberProduct: '123', balanceProduct: '1000', detaildProduct: 'Detalle' }
       ]
     };
 
-    let result: Card[] | undefined;
-    service.getCards().subscribe((cards) => (result = cards));
+    let resultado: Card[] | undefined;
+    servicio.getCards().subscribe((tarjetas) => (resultado = tarjetas));
 
-    const req = httpMock.expectOne('https://62e152f8fa99731d75d44571.mockapi.io/api/v1/test-front-end-skandia/cards');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    const peticion = httpMock.expectOne('https://62e152f8fa99731d75d44571.mockapi.io/api/v1/test-front-end-skandia/cards');
+    expect(peticion.request.method).toBe('GET');
+    peticion.flush(respuestaDePrueba);
 
-    expect(result).toBeDefined();
-    expect(result!.length).toBe(1);
-    expect(result![0].nameProduct).toBe('MFUND');
+    expect(resultado).toBeDefined();
+    expect(resultado!.length).toBe(1);
+    expect(resultado![0].nameProduct).toBe('MFUND');
   });
 
-  it('should handle network error and try fallback', (done) => {
-    const fallbackResponse = {
+  it('debería manejar errores de red e intentar el respaldo local', (done) => {
+    const respuestaRespaldo = {
       listCard: [
-        { nameProduct: 'LOCAL', numberProduct: '999', balanceProduct: '500', detaildProduct: 'Local fallback' }
+        { nameProduct: 'LOCAL', numberProduct: '999', balanceProduct: '500', detaildProduct: 'Respaldo local' }
       ]
     };
 
-    service.getCards().subscribe({
-      next: (cards) => {
-        expect(cards).toBeDefined();
-        expect(cards.length).toBe(1);
-        expect(cards[0].nameProduct).toBe('LOCAL');
+    servicio.getCards().subscribe({
+      next: (tarjetas) => {
+        expect(tarjetas).toBeDefined();
+        expect(tarjetas.length).toBe(1);
+        expect(tarjetas[0].nameProduct).toBe('LOCAL');
         done();
       },
       error: (err) => {
-        done.fail('Should not error when fallback succeeds: ' + err);
+        done.fail('No debería dar error cuando el respaldo funciona: ' + err);
       }
     });
 
     // Debido a retry(2), esperamos 3 peticiones a la URL remota (1 inicial + 2 reintentos)
-    const requests = [];
+    const peticiones = [];
     for (let i = 0; i < 3; i++) {
       const req = httpMock.expectOne('https://62e152f8fa99731d75d44571.mockapi.io/api/v1/test-front-end-skandia/cards');
-      requests.push(req);
-      req.flush('boom', { status: 500, statusText: 'Server Error' });
+      peticiones.push(req);
+      req.flush('boom', { status: 500, statusText: 'Error del Servidor' });
     }
 
-    // Después del fallo remoto, debe intentar el fallback local
-    const fallbackReq = httpMock.expectOne('/cards.mock.json');
-    fallbackReq.flush(fallbackResponse);
+    // Después del fallo remoto, debe intentar el respaldo local
+    const peticionRespaldo = httpMock.expectOne('/cards.mock.json');
+    peticionRespaldo.flush(respuestaRespaldo);
   });
 });
