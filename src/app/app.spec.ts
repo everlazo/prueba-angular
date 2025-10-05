@@ -1,10 +1,12 @@
 import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { App } from './app';
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
+      providers: [provideRouter([])]
     }).compileComponents();
   });
 
@@ -14,10 +16,14 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should render title', () => {
+  it('should have correct title', () => {
     const fixture = TestBed.createComponent(App);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, prueba-tecnica-frontend-angular');
+    const app = fixture.componentInstance;
+    expect(app.title()).toBe('prueba-tecnica-frontend-angular');
+  });
+
+  it('should render without errors', () => {
+    const fixture = TestBed.createComponent(App);
+    expect(() => fixture.detectChanges()).not.toThrow();
   });
 });

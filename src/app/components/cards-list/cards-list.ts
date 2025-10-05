@@ -10,9 +10,9 @@ import { DOCUMENT } from '@angular/common';
   styleUrl: './cards-list.scss'
 })
 export class CardsList implements OnInit, OnDestroy {
-  protected readonly loading = signal(true);
-  protected readonly error = signal<string | null>(null);
-  protected readonly cards = signal<Card[]>([]);
+  readonly loading = signal(true);
+  readonly error = signal<string | null>(null);
+  readonly cards = signal<Card[]>([]);
   protected readonly currentSlide = signal(0);
   protected readonly cardsPerView = signal(3); // Número de tarjetas visibles por defecto
   

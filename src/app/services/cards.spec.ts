@@ -43,13 +43,35 @@ describe('CardsService', () => {
     expect(result![0].nameProduct).toBe('MFUND');
   });
 
-  it('should propagate error on failure', () => {
-    let error: unknown;
-    service.getCards().subscribe({ next: () => {}, error: (e) => (error = e) });
+  it('should handle network error and try fallback', (done) => {
+    const fallbackResponse = {
+      listCard: [
+        { nameProduct: 'LOCAL', numberProduct: '999', balanceProduct: '500', detaildProduct: 'Local fallback' }
+      ]
+    };
 
-    const req = httpMock.expectOne('https://62e152f8fa99731d75d44571.mockapi.io/api/v1/test-front-end-skandia/cards');
-    req.flush('boom', { status: 500, statusText: 'Server Error' });
+    service.getCards().subscribe({
+      next: (cards) => {
+        expect(cards).toBeDefined();
+        expect(cards.length).toBe(1);
+        expect(cards[0].nameProduct).toBe('LOCAL');
+        done();
+      },
+      error: (err) => {
+        done.fail('Should not error when fallback succeeds: ' + err);
+      }
+    });
 
-    expect(error).toBeTruthy();
+    // Debido a retry(2), esperamos 3 peticiones a la URL remota (1 inicial + 2 reintentos)
+    const requests = [];
+    for (let i = 0; i < 3; i++) {
+      const req = httpMock.expectOne('https://62e152f8fa99731d75d44571.mockapi.io/api/v1/test-front-end-skandia/cards');
+      requests.push(req);
+      req.flush('boom', { status: 500, statusText: 'Server Error' });
+    }
+
+    // Después del fallo remoto, debe intentar el fallback local
+    const fallbackReq = httpMock.expectOne('/cards.mock.json');
+    fallbackReq.flush(fallbackResponse);
   });
 });

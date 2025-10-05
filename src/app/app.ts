@@ -12,5 +12,5 @@ import { FooterComponent } from './components/footer/footer.component';
   styleUrl: './app.scss'
 })
 export class App {
-  protected readonly title = signal('prueba-tecnica-frontend-angular');
+  readonly title = signal('prueba-tecnica-frontend-angular');
 }
